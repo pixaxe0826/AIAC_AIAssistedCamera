@@ -1,5 +1,12 @@
 # AI Camera Coach
 
+## Highlights
+
+- Built an iOS camera, Mac/iPhone geometry exporter, and ML research pipeline.
+- Best recorded pilot result: Sapiens2-0.4B partial last-block tuning test Local AUPRC **0.646**, versus spatial prior **0.116**.
+- Evaluation uses group-based splits, group-level confidence intervals, and sealed snapshots.
+- Failed results and their limitations are documented alongside positive signals.
+
 An iPhone camera foundation and an offline research workflow for learning where photo-composition problems occur.
 
 ## The problem
@@ -30,7 +37,9 @@ The current work connects a native camera foundation, explicit human problem-reg
 |---|---|---|
 | RGB Ranker v0 | OOF pair accuracy **51.99%**; group-macro accuracy **49.03%**, with a group-bootstrap 95% CI of **45.33–52.67%**. | Reliable composition-preference signal **not demonstrated**. |
 | Geometry Ranker v1 | OOF group-macro accuracy **55.11%**, 95% CI **49.41–60.69%**; exploratory permutation p-value **0.0693**. | **Weak** trend; stable ranking generalization not demonstrated. |
-| Sapiens2 localization pilot | Test Local AUPRC: spatial prior **0.115790**, frozen **0.588734**, continued frozen **0.607465**, partial last-block tuning **0.645877**. | Learning signal on the evaluated labels, with remaining shortcuts and false positives; **AI-ASSIST LABELING: NOT READY**. |
+| Sapiens2-0.4B localization pilot: 44 groups, single fixed group holdout | Test Local AUPRC: spatial prior **0.115790**, frozen **0.588734**, continued frozen **0.607465**, partial last-block tuning **0.645877**. | Learning signal on the evaluated labels, with remaining shortcuts and false positives; not yet ready for reliable labeling assistance. |
+
+Current work targets **Sapiens2-1B POSE-only**; model qualification is **in progress**.
 
 These experiments use different cohorts and objectives. Their metrics are not a common leaderboard. [The research log](docs/research-log.md) explains the failures, supervision, and limits of each result.
 
@@ -38,12 +47,12 @@ These experiments use different cohorts and objectives. Their metrics are not a 
 
 | Area | Status |
 |---|---|
-| Camera foundation | **PASS — USER VERIFIED**, as recorded in the project acceptance report. |
-| Live Apple Vision perception | Implemented; overall acceptance remains **CONDITIONAL PASS** because runtime measurements and repeated multi-device validation are incomplete. |
-| Mac/iPhone still-image export | An 80-image parity sample passed the recorded checks and human visual review; full-dataset extraction was **NOT RUN** in that task. |
-| V3 localized annotator | Implemented, including typed regions and explicit human review; native browser-zoom acceptance remains **NOT VERIFIED**. |
-| AI Draft review workflow | Implemented separation and approval safeguards; annotation quality and measured review-time savings remain **in progress**. |
-| POSE-only model qualification, Core ML integration, and learned on-device coaching | **In progress**. |
+| Camera foundation | The project owner reported successful camera-foundation acceptance. |
+| Live Apple Vision perception | Implemented; complete runtime measurements and repeated multi-device validation are still pending. |
+| Mac/iPhone still-image export | An 80-image parity sample passed the recorded checks and human visual review; full-dataset extraction was not performed in that task. |
+| V3 localized annotator | Implemented, including typed regions and explicit human review; native browser-zoom acceptance has not yet been verified. |
+| AI Draft review workflow | Implemented separation and approval safeguards; annotation quality and measured review-time savings remain to be demonstrated. |
+| POSE-only model qualification, Core ML integration, and learned on-device coaching | Work is in progress. |
 
 ## Technology stack
 
@@ -59,4 +68,4 @@ These experiments use different cohorts and objectives. Their metrics are not a 
 - [Research log](docs/research-log.md): the progression from ranking to problem localization and AI Draft review.
 - [Evaluation](docs/evaluation.md): group splits, sealed snapshots, reproducibility, and hardware evidence.
 
-This repository is a documentation showcase. Research data and weights are separate from production-cleared assets; the recorded experiments do not establish commercial deployment clearance.
+This repository is a documentation showcase.

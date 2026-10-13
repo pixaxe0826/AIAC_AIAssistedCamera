@@ -48,11 +48,11 @@ Deterministic split assignment does not guarantee bitwise-identical CUDA trainin
 
 The following historical training-stage measurements are from the recorded Sapiens2-0.4B pilot on a Tesla T4. Memory values are in GiB. These are not measurements of the later POSE-only model or of an iPhone.
 
-| Stage | Peak Torch allocated | Peak Torch reserved | Min CUDA free | Peak NVML used | Peak Windows dedicated | Peak Windows shared | Peak host RAM used | Mean GPU utilization | Peak temperature | Approx. speed |
-|---|---:|---:|---:|---:|---|---|---:|---:|---:|---:|
-| Frozen | 1.632 | 1.770 | 12.652 | 2.348 | NA | NA | 2.784 | 47.76% | 79 C | 31.21 steps/s |
-| Frozen Continue | 1.632 | 1.770 | 12.652 | 2.348 | NA | NA | 2.803 | 46.82% | 83 C | 30.00 steps/s |
-| Partial Last-1 | 2.003 | 2.139 | 12.283 | 2.717 | NA | NA | 2.822 | 68.71% | 82 C | 12.53 steps/s |
+| Stage | Peak Torch allocated | Peak Torch reserved | Min CUDA free | Peak NVML used | Peak host RAM used | Mean GPU utilization | Peak temperature | Approx. speed |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| Frozen | 1.632 | 1.770 | 12.652 | 2.348 | 2.784 | 47.76% | 79 C | 31.21 steps/s |
+| Frozen Continue | 1.632 | 1.770 | 12.652 | 2.348 | 2.803 | 46.82% | 83 C | 30.00 steps/s |
+| Partial Last-1 | 2.003 | 2.139 | 12.283 | 2.717 | 2.822 | 68.71% | 82 C | 12.53 steps/s |
 
 Torch allocator peaks are reset per stage; NVML values are sampled device-level maxima. Host RAM is system usage, not process RSS. Windows counters are unavailable in that Linux runtime. Approximate step rates include checkpoint and validation intervals and are not isolated forward-pass benchmarks.
 
@@ -62,4 +62,4 @@ The source report classified memory pressure as LOW for this workload, with no O
 
 Camera acceptance, live Vision acceptance, exporter parity, research model quality, and human review benefits are separate gates. An 80-image exporter parity sample does not certify full-dataset extraction or detector accuracy. Live Vision retains its conditional runtime-evidence boundary.
 
-Research feasibility does not establish commercial-training or deployment clearance. Unclear rights remain **REVIEW_REQUIRED**. Learned on-device coaching, production model integration, and qualified autonomous labeling are **in progress**.
+Learned on-device coaching, production model integration, and qualified autonomous labeling are **in progress**.

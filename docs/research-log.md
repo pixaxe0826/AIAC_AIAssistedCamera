@@ -56,11 +56,11 @@ The recorded implementation reports distinguish functional checks from acceptanc
 
 ## 5. Sapiens2: supervised localization, then a POSE-only extension
 
-### Recorded localization pilot
+### Recorded Sapiens2-0.4B localization pilot
 
 The historical Sapiens2-0.4B pilot used **44 shooting groups**, split into **32 training, 6 validation, and 6 test groups**. There were **754 eligible images**. The bounded comparison used frozen spatial features, continued head training, and partial tuning of the last backbone block.
 
-| System | Test Local AUPRC |
+| System | Sapiens2-0.4B pilot: Test Local AUPRC |
 |---|---:|
 | Spatial prior | 0.115790 |
 | Frozen | 0.588734 |
