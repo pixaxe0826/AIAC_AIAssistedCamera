@@ -62,6 +62,15 @@ These experiments use different cohorts and objectives. Their metrics are not a 
 | Research | Python, PyTorch, TorchVision, NumPy, Pillow, Sapiens2. |
 | Annotation and review | SQLite, Python HTTP services, JavaScript, HTML Canvas, CSS. |
 
+## Code samples
+
+[![CI](https://github.com/pixaxe0826/AIAC_AIAssistedCamera/actions/workflows/ci.yml/badge.svg)](https://github.com/pixaxe0826/AIAC_AIAssistedCamera/actions/workflows/ci.yml)
+
+- [Python group evaluation](python/group-eval/README.md): extracted group folds, OOF aggregation, pair/group-macro metrics, group-bootstrap intervals, and permutation utilities. Tests use synthetic in-memory records.
+- [Swift latest-frame scheduler](swift/LatestFrameScheduler/README.md): the original actor-based scheduling logic with minimal frame/result protocols and a non-awaiting camera-facing adapter.
+
+The Python sample contains evaluation mechanisms used by the RGB Ranker v0 and Geometry Ranker v1 result rows above; the Swift sample represents the independent live-analysis scheduling branch.
+
 ## Read more
 
 - [Architecture](docs/architecture.md): camera, exporter, ML, and human-review boundaries.
