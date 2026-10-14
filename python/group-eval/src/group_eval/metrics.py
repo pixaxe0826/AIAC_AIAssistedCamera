@@ -23,6 +23,7 @@ def _percentile(values: Sequence[float], probability: float) -> float:
 
 
 def prediction_metrics(predictions: Sequence[dict[str, Any]], *, ece_bins: int, high_confidence: float) -> dict[str, Any]:
+    """Summarize pairwise accuracy, group-macro accuracy, loss, and calibration."""
     if not predictions:
         raise ValueError("metrics require predictions")
     epsilon = 1e-7
@@ -162,6 +163,7 @@ def group_bootstrap_interval(
     seed: int,
     samples: int,
 ) -> dict[str, Any]:
+    """Return a seeded percentile 95% interval by resampling whole-group metric values."""
     grouped: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for row in predictions:
         grouped[row["group_id"]].append(row)

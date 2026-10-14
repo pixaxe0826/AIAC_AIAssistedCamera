@@ -1,18 +1,29 @@
 // Extracted from the private AI Camera Coach repository and adapted to run standalone.
 import Foundation
 
+/// Captures scheduler counters and retained-frame state at the time of inspection.
 public struct LatestFrameSchedulerSnapshot: Equatable, Sendable {
+    /// The number of submitted frames, including rejected submissions.
     public let submittedFrameCount: Int
+    /// The number of frames passed to the processor.
     public let startedFrameCount: Int
+    /// The number of accepted results passed to delivery.
     public let deliveredResultCount: Int
+    /// The number of rejected submissions, rejected results, and inference failures.
     public let discardedResultCount: Int
+    /// Whether the scheduler is draining queued work.
     public let hasInFlightFrame: Bool
+    /// The identifier of the newest retained pending frame, if any.
     public let pendingFrameID: UInt64?
+    /// The active camera generation, or nil before any frame is accepted.
     public let activeCameraGeneration: Int?
 }
 
+/// Serializes inference while retaining at most the latest pending frame.
 public actor LatestFrameScheduler<Output: Sendable> {
+    /// Processes one frame asynchronously and returns its result.
     public typealias Processor = @Sendable (any AnalysisFrame) async throws -> Output
+    /// Decides whether a result is still valid against the latest scheduler state and time.
     public typealias Acceptance = @Sendable (
         _ output: Output,
         _ sourceFrame: any AnalysisFrame,
@@ -20,6 +31,7 @@ public actor LatestFrameScheduler<Output: Sendable> {
         _ activeCameraGeneration: Int,
         _ now: TimeInterval
     ) -> Bool
+    /// Receives a result after it passes the acceptance check.
     public typealias Delivery = @Sendable (Output) -> Void
 
     private let processor: Processor
@@ -36,6 +48,7 @@ public actor LatestFrameScheduler<Output: Sendable> {
     private var deliveredResultCount = 0
     private var discardedResultCount = 0
 
+    /// Creates a scheduler with caller-supplied processing, acceptance, clock, and delivery.
     public init(
         processor: @escaping Processor,
         acceptance: @escaping Acceptance,
@@ -50,6 +63,7 @@ public actor LatestFrameScheduler<Output: Sendable> {
         self.delivery = delivery
     }
 
+    /// Retains the latest eligible frame and starts draining without awaiting inference.
     public func submit(_ frame: any AnalysisFrame) {
         submittedFrameCount += 1
         let generation = frame.metadata.cameraGeneration
@@ -74,10 +88,12 @@ public actor LatestFrameScheduler<Output: Sendable> {
         Task { await self.drain() }
     }
 
+    /// Removes the pending frame without cancelling inference already in progress.
     public func cancelPending() {
         pendingFrame = nil
     }
 
+    /// Returns the current counters, pending frame identifier, and camera generation.
     public func snapshot() -> LatestFrameSchedulerSnapshot {
         LatestFrameSchedulerSnapshot(
             submittedFrameCount: submittedFrameCount,
@@ -117,6 +133,7 @@ public actor LatestFrameScheduler<Output: Sendable> {
 }
 
 extension LatestFrameScheduler where Output: SchedulerRecommendation {
+    /// Creates a scheduler that rejects mismatched, older-frame, older-generation, or expired results.
     public static func recommendations<Provider: CoachingInferenceProviding>(
         provider: Provider,
         timeSource: @escaping @Sendable () -> TimeInterval = {

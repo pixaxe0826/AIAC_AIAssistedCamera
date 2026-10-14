@@ -14,6 +14,7 @@ def _stable_digest(*parts: str) -> str:
 def build_group_folds(
     profiles: dict[str, dict[str, Any]], *, folds: int, seed: int
 ) -> dict[str, int]:
+    """Assign complete groups to seeded, capacity-balanced folds."""
     if folds < 2 or len(profiles) < folds:
         raise ValueError("fold assignment requires at least two folds and enough groups")
     count = len(profiles)
@@ -104,6 +105,7 @@ def select_validation_groups(
     seed: int,
     test_fold: int,
 ) -> set[str]:
+    """Select a deterministic, distribution-balanced validation subset of groups."""
     if not 0 < count < len(group_ids):
         raise ValueError("validation group count must leave training groups")
     ordered = sorted(
@@ -156,6 +158,7 @@ def split_records_for_fold(
     validation_groups: int,
     seed: int,
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[dict[str, Any]], set[str]]:
+    """Return disjoint train/validation/test records and validation groups for one fold."""
     test_groups = {group_id for group_id, value in assignment.items() if value == fold}
     remaining = sorted(set(assignment) - test_groups)
     val_groups = select_validation_groups(

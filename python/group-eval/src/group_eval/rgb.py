@@ -49,6 +49,7 @@ def _percentile(values: list[float], probability: float) -> float:
     return ordered[lower] * (1.0 - weight) + ordered[upper] * weight
 
 def prediction_metrics(predictions: list[dict[str, Any]]) -> dict[str, Any]:
+    """Summarize RGB pair accuracy, group-macro accuracy, loss, and swap consistency."""
     if not predictions:
         raise ValueError("metrics require predictions")
     losses = []
@@ -158,6 +159,9 @@ def prediction_metrics(predictions: list[dict[str, Any]]) -> dict[str, Any]:
 def source_bootstrap_accuracy_interval(
     predictions: list[dict[str, Any]], *, seed: int, samples: int = SOURCE_BOOTSTRAP_SAMPLES
 ) -> dict[str, Any]:
+    """Resamples shooting groups (source = shooting group in this dataset).
+    Return a seeded percentile 95% interval for non-tie group-macro accuracy.
+    """
     if samples < 1:
         raise ValueError("bootstrap samples must be positive")
     source_outcomes: dict[str, list[bool]] = defaultdict(list)

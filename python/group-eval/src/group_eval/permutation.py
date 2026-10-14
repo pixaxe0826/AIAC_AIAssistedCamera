@@ -22,6 +22,7 @@ class PermutationData:
     pairs: tuple[dict[str, Any], ...]
 
 def permute_group_tiers(data: PermutationData, *, seed: int) -> PermutationData:
+    """Shuffle eligible tier labels within each group while preserving counts and relations."""
     eligible_groups = {pair["group_id"] for pair in data.pairs}
     labels = list(data.ranking_labels)
     rng = random.Random(seed)
@@ -106,6 +107,7 @@ def permutation_summary(
     observed: float,
     metric_name: str = "group_macro_pair_accuracy",
 ) -> dict[str, Any]:
+    """Summarize the null distribution and the one-sided, plus-one empirical p-value."""
     rows = [completed_by_index[index] for index in range(target)]
     null_values = [float(row[metric_name]) for row in rows]
     greater_or_equal = sum(value >= observed for value in null_values)
